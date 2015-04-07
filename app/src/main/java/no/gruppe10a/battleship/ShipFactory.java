@@ -6,10 +6,10 @@ package no.gruppe10a.battleship;
 public abstract class ShipFactory {
 
     //Creates a ship
-    protected abstract Ship createShip(String shipType);
+    protected abstract Ship createShip(String shipType, String shipName);
 
-    public Ship orderShip(String shipType) {
-        Ship newShip = createShip(shipType);
+    public Ship orderShip(String shipType, String shipName) {
+        Ship newShip = createShip(shipType, shipName);
 
         return Ship;
     }

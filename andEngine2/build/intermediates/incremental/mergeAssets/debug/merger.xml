@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/oyvindnygard/AndroidStudioProjects/Battleship/andEngine2/src/main/assets"/></dataSet><dataSet config="debug"><source path="/Users/oyvindnygard/AndroidStudioProjects/Battleship/andEngine2/src/debug/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/Eirik/Dropbox/ntnu/ProgArk/Prosjekt/Battleship/andEngine2/src/main/assets"/></dataSet><dataSet config="debug"><source path="/Users/Eirik/Dropbox/ntnu/ProgArk/Prosjekt/Battleship/andEngine2/src/debug/assets"/></dataSet></merger>

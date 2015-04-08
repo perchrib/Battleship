@@ -10,8 +10,16 @@ public abstract class Ship {
     private int size;
     private Image img;
 
-    public Ship(String name, int size, Image img) {
-        
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
     }
 
 }

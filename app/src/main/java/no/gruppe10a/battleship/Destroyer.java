@@ -7,7 +7,9 @@ import android.media.Image;
  */
 public class Destroyer extends Ship {
 
-    public Destroyer(String name, int size, Image img) {
-        super(name, size, img);
+    public Destroyer() {
+        super.setName("Destroyer");
+        super.setSize(2);
+        super.setImg(null);
     }
 }

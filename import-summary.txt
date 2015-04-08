@@ -38,13 +38,13 @@ Moved Files:
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => andEngine/src/main/AndroidManifest.xml
-* jni/ => andEngine/src/main/jni/
-* libs/armeabi-v7a/libandengine.so => andEngine/src/main/jniLibs/armeabi-v7a/libandengine.so
-* libs/armeabi/libandengine.so => andEngine/src/main/jniLibs/armeabi/libandengine.so
-* libs/x86/libandengine.so => andEngine/src/main/jniLibs/x86/libandengine.so
-* res/ => andEngine/src/main/res/
-* src/ => andEngine/src/main/java/
+* AndroidManifest.xml => andEngine2/src/main/AndroidManifest.xml
+* jni/ => andEngine2/src/main/jni/
+* libs/armeabi-v7a/libandengine.so => andEngine2/src/main/jniLibs/armeabi-v7a/libandengine.so
+* libs/armeabi/libandengine.so => andEngine2/src/main/jniLibs/armeabi/libandengine.so
+* libs/x86/libandengine.so => andEngine2/src/main/jniLibs/x86/libandengine.so
+* res/ => andEngine2/src/main/res/
+* src/ => andEngine2/src/main/java/
 
 Next Steps:
 -----------

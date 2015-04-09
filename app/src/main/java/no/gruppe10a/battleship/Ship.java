@@ -9,6 +9,7 @@ public abstract class Ship {
     private String name;
     private int size;
     private Image img;
+    private int hp;
 
     public void setName(String name) {
         this.name = name;
@@ -21,5 +22,19 @@ public abstract class Ship {
     public void setImg(Image img) {
         this.img = img;
     }
+
+    public void setHp(int hp) { this.hp = hp; }
+
+    public void TakeDamage() {
+        hp = hp-1;
+    }
+
+    public boolean isDestroyed() {
+        if (hp <= 0) {
+            return true;
+        }
+        return false;
+    }
+
 
 }

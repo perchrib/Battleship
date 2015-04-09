@@ -10,6 +10,7 @@ public class Battleship extends Ship {
         super.setName("Battleship");
         super.setSize(4);
         super.setImg(null);
+        super.setHp(4);
     }
 
 }

@@ -9,5 +9,6 @@ public class Submarine extends Ship {
         super.setName("Submarine");
         super.setSize(3);
         super.setImg(null);
+        super.setHp(3);
     }
 }

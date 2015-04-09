@@ -9,5 +9,6 @@ public class Carrier extends Ship {
         super.setName("Carrier");
         super.setSize(5);
         super.setImg(null);
+        super.setHp(5);
     }
 }

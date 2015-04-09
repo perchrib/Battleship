@@ -78,4 +78,10 @@ public class GameBoard {
             return 2;
         }
     }
+
+    public boolean lostGame() {
+        return ships.isEmpty();
+    }
+
+    
 }

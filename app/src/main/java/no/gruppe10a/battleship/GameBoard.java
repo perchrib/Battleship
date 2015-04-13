@@ -20,7 +20,6 @@ public class GameBoard {
             for (int j = 0; j < board[i].length; j++) {
                 board[i][j] = null;
             }
-
         }
     }
 
@@ -83,5 +82,5 @@ public class GameBoard {
         return ships.isEmpty();
     }
 
-    
+
 }

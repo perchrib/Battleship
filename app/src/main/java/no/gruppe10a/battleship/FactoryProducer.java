@@ -5,7 +5,7 @@ package no.gruppe10a.battleship;
  */
 public class FactoryProducer {
 
-    public static ShipFactory createFactory(String factoryType) {
+    public ShipFactory createFactory(String factoryType) {
         if(factoryType.equalsIgnoreCase("DESTROYER")) {
             return new DestroyerFactory();
         }

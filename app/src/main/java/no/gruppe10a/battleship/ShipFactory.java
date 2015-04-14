@@ -7,11 +7,11 @@ package no.gruppe10a.battleship;
 public abstract class ShipFactory {
 
     //Subclasses will define what kind of ship to be created
-    protected abstract Ship createShip(String name);
+    protected abstract Ship createShip(int id);
 
     //Orders a new ship. Shiporders processed the same way for all factories
-    public Ship orderShip(String name) {
-        Ship newShip = this.createShip(name);
+    public Ship orderShip(int id) {
+        Ship newShip = this.createShip(id);
 
         return newShip;
     }

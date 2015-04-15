@@ -6,11 +6,12 @@ package no.gruppe10a.battleship;
 public class Battleship extends Ship {
 
 
-    public Battleship() {
+    public Battleship(int id, int size) {
+        super(id, size);
         super.setName("Battleship");
-        super.setSize(4);
-        super.setImg(null);
-        super.setHp(4);
+        super.setSize(size);
+        //super.setImg(null);
+        super.setHp(size);
     }
 
 }

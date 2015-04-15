@@ -5,10 +5,11 @@ package no.gruppe10a.battleship;
  */
 public class Submarine extends Ship {
 
-    public Submarine() {
+    public Submarine(int id, int size) {
+        super(id, size);
         super.setName("Submarine");
-        super.setSize(3);
-        super.setImg(null);
-        super.setHp(3);
+        super.setSize(size);
+        //super.setImg(null);
+        super.setHp(size);
     }
 }

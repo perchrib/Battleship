@@ -1,17 +1,18 @@
 package no.gruppe10a.battleship;
 
-import android.media.Image;
+//import android.media.Image;
 
 /**
  * Created by Eirik on 07/04/15.
  */
 public class Destroyer extends Ship {
 
-    public Destroyer() {
+    public Destroyer(int id, int size) {
+        super(id, size);
         super.setName("Destroyer");
-        super.setSize(2);
-        super.setImg(null);
-        super.setHp(2);
+        super.setSize(size);
+        //super.setImg(null);
+        super.setHp(size);
     }
 
 

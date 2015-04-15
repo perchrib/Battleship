@@ -5,10 +5,14 @@ package no.gruppe10a.battleship;
  */
 public class SubmarineFactory extends ShipFactory {
 
+    public SubmarineFactory(int shipSize) {
+        super(shipSize);
+    }
+
 
     @Override
-    protected Ship createShip(String name) {
-        Submarine newShip = new SubMarine(name);
+    protected Ship createShip(int id, int size) {
+        Submarine newShip = new Submarine(id, size);
 
         return newShip;
     }

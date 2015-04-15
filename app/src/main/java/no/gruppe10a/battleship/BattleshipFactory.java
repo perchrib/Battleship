@@ -6,9 +6,12 @@ package no.gruppe10a.battleship;
 public class BattleshipFactory extends ShipFactory{
 
 
+    public BattleshipFactory(int shipSize) {
+        super(shipSize);
+    }
     @Override
-    protected Ship createShip(String name) {
-        Battleship newShip = new BattleShip(name);
+    protected Ship createShip(int id, int size) {
+        Battleship newShip = new Battleship(id, size);
 
         return newShip;
     }

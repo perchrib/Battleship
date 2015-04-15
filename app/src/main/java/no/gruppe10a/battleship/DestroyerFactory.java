@@ -5,9 +5,13 @@ package no.gruppe10a.battleship;
  */
 public class DestroyerFactory extends ShipFactory {
 
+
+    public DestroyerFactory(int shipSize) {
+        super(shipSize);
+    }
     @Override
-    protected Ship createShip(int id) {
-        Destroyer newShip = new Destroyer(id);
+    protected Ship createShip(int id, int size) {
+        Destroyer newShip = new Destroyer(id, size);
 
         return newShip;
     }

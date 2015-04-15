@@ -8,8 +8,12 @@ public class ShipPart {
     /** Id number of part to seperate parts belonging to same ship */
     private int partId;
 
-    public ShipPart(int id) {
+    /** The ship this part belongs to*/
+    private Ship ownerShip;
+
+    public ShipPart(int id, Ship ownerShip) {
         this.partId = id;
+        this.ownerShip = ownerShip;
     }
 
 

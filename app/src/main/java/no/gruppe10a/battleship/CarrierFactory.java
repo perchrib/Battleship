@@ -5,9 +5,13 @@ package no.gruppe10a.battleship;
  */
 public class CarrierFactory extends ShipFactory {
 
+    public CarrierFactory(int shipSize) {
+        super(shipSize);
+    }
+
     @Override
-    protected Ship createShip(String name) {
-        Carrier newShip = new Carrier(name);
+    protected Ship createShip(int id, int size) {
+        Carrier newShip = new Carrier(id, size);
 
         return newShip;
     }

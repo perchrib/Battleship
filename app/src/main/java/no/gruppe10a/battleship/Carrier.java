@@ -5,10 +5,11 @@ package no.gruppe10a.battleship;
  */
 public class Carrier extends Ship {
 
-    public Carrier() {
+    public Carrier(int id, int size) {
+        super(id, size);
         super.setName("Carrier");
-        super.setSize(5);
-        super.setImg(null);
-        super.setHp(5);
+        super.setSize(size);
+        //super.setImg(null);
+        super.setHp(size);
     }
 }

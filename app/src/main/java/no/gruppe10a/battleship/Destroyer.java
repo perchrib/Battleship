@@ -13,6 +13,7 @@ public class Destroyer extends Ship {
         super.setSize(size);
         //super.setImg(null);
         super.setHp(size);
+
     }
 
 

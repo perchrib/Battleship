@@ -1,5 +1,6 @@
 package no.gruppe10a.battleship;
 
+
 /**
  * Created by Zlash on 08/04/15.
  */

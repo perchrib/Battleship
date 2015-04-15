@@ -12,7 +12,7 @@ public class GameBoard {
     private ShipPart [][] board;
 
     /** The board visible to the enemy player */
-    private Ship [][] attackedBoard;
+    private ShipPart [][] attackedBoard;
 
     /** The ships on this board (not removed from list when destroyed) */
     private ArrayList<Ship> ships;
@@ -26,11 +26,16 @@ public class GameBoard {
     private static BattleshipFactory battleshipFactory;
     private static CarrierFactory carrierFactory;
 
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
 
     public GameBoard(FactoryProducer factoryProducer) {
         board = new ShipPart [Constants.ROW_SIZE][Constants.COLUMN_SIZE];
         ships = new ArrayList<Ship>();
         //destroyedShips = new ArrayList<Ship>();
+
+        System.out.println("1. Constructor");
 
         this.destroyerFactory = (DestroyerFactory) factoryProducer.createFactory("DESTROYER");
         this.submarineFactory = (SubmarineFactory) factoryProducer.createFactory("SUBMARINE");
@@ -108,6 +113,7 @@ public class GameBoard {
      * Initializes and adds ships to the board's list of ships
      */
     private void initializeShips() {
+        System.out.println("3. Init ships");
         int nofDestroyers = Constants.NUMBER_OF_DESTROYERS;
         int nofSubmarines = Constants.NUMBER_OF_SUBMARINES;
         int nofBattleships = Constants.NUMBER_OF_BATTLESHIPS;
@@ -119,10 +125,11 @@ public class GameBoard {
             shipCounter++;
         }
 
-        /*for(int i = 0; i < nofSubmarines; i++) {
+        for(int i = 0; i < nofSubmarines; i++) {
             this.ships.add(this.submarineFactory.orderShip(shipCounter));
             shipCounter++;
         }
+        System.out.println("4. Done init ships");
 
         for(int i = 0; i < nofBattleships; i++) {
             this.ships.add(this.battleshipFactory.orderShip(shipCounter));
@@ -132,8 +139,7 @@ public class GameBoard {
         for(int i = 0; i < nofCarriers; i++) {
             this.ships.add(this.carrierFactory.orderShip(shipCounter));
             shipCounter++;
-        }*/
-
+        }
     }
 
 
@@ -141,13 +147,14 @@ public class GameBoard {
      * Initializes board and adds ships to it
      */
     private void initializeBoard() {
+        System.out.println("2. Initialize board");
         for (int i = 0; i < board.length; i ++) {
             for (int j = 0; j < board[i].length; j++) {
                 board[i][j] = null;
             }
         }
         this.initializeShips();
-        this.placeShipsFixed();
+        this.placeShipsRandom();
     }
 
     /**
@@ -155,6 +162,7 @@ public class GameBoard {
      * INCOMPLETE
      */
     private void placeShipsRandom() {
+        System.out.println("5. Start placing random");
         Random r = new Random();
         int min = 0; //Lowest index possible for row and column
         boolean horizontal = true;
@@ -163,22 +171,38 @@ public class GameBoard {
             int randRow = -1;
             int randCol = -1;
 
-            while(!checkIfValidShipPlacement(s, randRow, randCol, horizontal)) {
+            ArrayList<int[]> shipPartCoords = this.calcShipPartCoords(s, randRow, randCol, horizontal);
+
+            while(!checkIfValidShipPlacement(shipPartCoords)) {
                 randRow = r.nextInt(Constants.ROW_SIZE - min) + min;
                 randCol = r.nextInt(Constants.COLUMN_SIZE - min) + min;
+                shipPartCoords = this.calcShipPartCoords(s, randRow, randCol, horizontal);
             }
 
-            for(ShipPart.)
+            //DEBUG CODE
+            System.out.println("-- Produced shipCoords");
 
+            for (int[] coord : shipPartCoords) {
+                System.out.println("Row:" + coord[0] + ", Col:" + coord[1]);
+            }
+
+
+            //Counter for iteration through shipPartCoords
+            int k = 0;
+            for(ShipPart part : s.getShipParts()) {
+                int[] coords = shipPartCoords.get(k);
+                System.out.println("Row:" + coords[0] + ", Col:" + coords[1]);
+                int rowCoord = coords[0];
+                int colCoord = coords[1];
+
+                this.board[rowCoord][colCoord] = part;
+                k++;
+            }
 
         }
+        System.out.println("-- Done placing random");
     }
 
-
-    private void placeShipsFixed() {
-        this.board[0][0] = this.ships.get(0);
-        this.board[9][9] = this.ships.get(1);
-    }
 
 
     /**
@@ -186,13 +210,29 @@ public class GameBoard {
      * For printing in console to test and debug before integrating with graphics
      */
     public void printBoard() {
+        System.out.println("PRintsboard");
         for(int row = 0; row < this.board.length; row++) {
             for(int col = 0; col < this.board[row].length; col++) {
                 if(this.board[row][col] == null) {
                     System.out.print(0 + " ");
                 }
-                else {
-                    System.out.print("S ");
+
+                else if(this.board[row][col] instanceof ShipPart) {
+                    if (this.board[row][col].getOwnerShip().getName().equalsIgnoreCase("Destroyer")) {
+                        System.out.print(ANSI_BLUE + "D " + ANSI_RESET);
+                    }
+
+                    else if (this.board[row][col].getOwnerShip().getName().equalsIgnoreCase("Submarine")) {
+                        System.out.print(ANSI_BLUE + "S " + ANSI_RESET);
+                    }
+
+                    else if (this.board[row][col].getOwnerShip().getName().equalsIgnoreCase("Battleship")) {
+                        System.out.print(ANSI_BLUE + "B " + ANSI_RESET);
+                    }
+
+                    else if (this.board[row][col].getOwnerShip().getName().equalsIgnoreCase("Carrier")) {
+                        System.out.print(ANSI_BLUE + "C " + ANSI_RESET);
+                    }
                 }
             }
             System.out.println();
@@ -205,68 +245,130 @@ public class GameBoard {
         }*/
     }
 
+  /*  *//**
+     * Attack a square on this board
+     * @param row   Attacking row number
+     * @param col   Attacking col number
+     *//*
+    public void attackSquare(int row, int col) {
+        if(isShipHit(row, col)) {
+            this.attackedBoard[row][col] = this.board[row][col];
+        }
+
+    }
+    */
 
     /**
-     * Attacks a square on this board. Marks the attacked board
-     * @param x row number in board array
-     * @param y column number in board array
-     * @return  true if ship is hit and false otherwise
+     * Checks if a ship has been hit
+     * @param row   Row number on board
+     * @param col   Column number on board
+     * @return      If it is a miss, hit or if it is a leathal hit destroying the ship
      */
-    public boolean attackSquare(int x, int y) {
+    private HitType isShipHit(int row, int col) {
+
+        // Return false if coordinates are out of bounds
+        if(!isWithinBounds(row, col)) return HitType.MISS;
+
+        if(this.board[row][col] instanceof ShipPart) {
+            ShipPart attackedPart = this.board[row][col];
+            attackedPart.destroy();
+            if()
+        }
+
+        return HitType.MISS;
+    }
+
+    /**
+     * Checks if specified row and column numbers are out of bounds
+     * @param row   Row number in board
+     * @param col   Column number board
+     * @return
+     */
+    private boolean isWithinBounds(int row, int col) {
+        if (row < 0 || row > Constants.ROW_SIZE-1 || col < 0 || col > Constants.COLUMN_SIZE) {
+            return false;
+        }
+
         return true;
     }
 
-
     /**
      * Checks if the ship can be placed starting in the square specified by the coordinates
-     * @param s             The ship to be placed
-     * @param row         The x-coordinate of one end of the ship
-     * @param col         The y-coordinate of one end of the ship
-     * @param horizontal    True if ship is to be placed horizontally
-     * @return              True if valid placement, and false otherwise
      */
-    private boolean checkIfValidShipPlacement(Ship s, int row, int col, boolean horizontal) {
-        if (row == -1 || col == -1) {
-            return false;
+    private boolean checkIfValidShipPlacement(ArrayList<int[]> shipPartCoords) {
+
+        for(int [] c : shipPartCoords) {
+            int cRow = c[0];
+            int cCol = c[1];
+
+            // Check if ship part is being placed outside board
+            if(cRow < 0 || cRow > Constants.ROW_SIZE-1 ||
+                    cCol < 0 || cCol > Constants.COLUMN_SIZE-1)
+                return false;
+
+            // Check if ship part is being placed on another ship's ship part
+            else if (this.board[cRow][cCol] instanceof ShipPart) {
+                //DEBUGGING
+                System.out.println("TRYING TO PLACE ON OTHER SHIP");
+                return false;
+            }
+
+            // Check if ship part is being placed next to another ship's ship part
+            else if (
+                    (cRow+1 >= 0 && cRow+1 < Constants.ROW_SIZE && this.board[cRow+1][cCol] instanceof ShipPart) ||
+                    (cRow-1 >= 0 && cRow-1 < Constants.ROW_SIZE && this.board[cRow-1][cCol] instanceof ShipPart) ||
+                    (cCol+1 >= 0 && cCol+1 < Constants.COLUMN_SIZE && this.board[cRow][cCol+1] instanceof ShipPart) ||
+                    (cCol-1 >= 0 && cCol-1 < Constants.COLUMN_SIZE && this.board[cRow][cCol-1] instanceof ShipPart) ||
+                    (cCol-1 >= 0 && cCol-1 < Constants.COLUMN_SIZE && cRow-1 >= 0 && cRow-1 < Constants.COLUMN_SIZE && this.board[cRow-1][cCol-1] instanceof ShipPart) ||
+                    (cCol-1 >= 0 && cCol-1 < Constants.COLUMN_SIZE && cRow+1 >= 0 && cRow+1 < Constants.COLUMN_SIZE && this.board[cRow+1][cCol-1] instanceof ShipPart) ||
+                    (cCol+1 >= 0 && cCol+1 < Constants.COLUMN_SIZE && cRow-1 >= 0 && cRow-1 < Constants.COLUMN_SIZE && this.board[cRow-1][cCol+1] instanceof ShipPart) ||
+                    (cCol+1 >= 0 && cCol+1 < Constants.COLUMN_SIZE && cRow+1 >= 0 && cRow+1 < Constants.COLUMN_SIZE && this.board[cRow+1][cCol+1] instanceof ShipPart)
+                    )
+            {
+                return false;
+            }
+
         }
+        return true;
+    }
+
+    /**
+     * Calculates where ship parts will be placed, based on an initial coordinate
+     * @param s             The ship owning the ship parts
+     * @param row           Initial placement row of the first ship part
+     * @param col           Initial placement column of the first ship part
+     * @param horizontal    True if ship is to be placed horizontally
+     * @return              Returns an ArrayList consisting of arrays with two coordinates for each ship part
+     */
+    private ArrayList<int[]> calcShipPartCoords(Ship s, int row, int col, boolean horizontal) {
+        System.out.println("6. Starting calculating ship part coords");
 
         //List of potential placement coordinates for the ship parts
         ArrayList<int[]> shipPartCoords = new ArrayList<int[]>();
 
         //Individual ship part coordinates
-        int [] coords = new int[2];
 
-        if (horizontal == true) {
+        if (horizontal) {
             for(int i = 0; i < s.getShipParts().size(); i++) {
+                int [] coords = new int[2];
                 coords[0] = row;
                 coords[1] = col+i;
                 shipPartCoords.add(coords);
             }
         }
 
-        else if (horizontal == false) {
+        else if (!horizontal) {
             for(int i = 0; i < s.getShipParts().size(); i++) {
+                int [] coords = new int[2];
                 coords[0] = row+i;
                 coords[1] = col;
                 shipPartCoords.add(coords);
             }
         }
 
-        for(int [] c : shipPartCoords) {
-            int cRow = c[0];
-            int cCol = c[1];
-
-            if(cRow < 0 || cRow > Constants.ROW_SIZE-1 ||
-                    cCol < 0 || cCol > Constants.COLUMN_SIZE-1 ||
-                    this.board[cRow][cCol] == null ||
-                    this.board[cRow][cCol] instanceof ShipPart) {
-                return false;
-            }
-
-        }
-
-        return true;
+        return shipPartCoords;
     }
+
 
 
 

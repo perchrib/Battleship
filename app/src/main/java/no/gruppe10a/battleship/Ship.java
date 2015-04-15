@@ -19,6 +19,8 @@ public abstract class Ship {
 
     public Ship(int id, int size) {
         this.shipId = id;
+        this.size = size;
+        this.shipParts = new ArrayList<ShipPart>();
 
         int shipPartCounter = 1;
         for(int i = 0; i < this.size; i++) {
@@ -48,13 +50,14 @@ public abstract class Ship {
     }
 
     public void takeDamage() {
-        hp = hp-1;
+        this.hp = this.hp-1;
     }
 
     public boolean isDestroyed() {
-        if (hp <= 0) {
+        if (this.hp <= 0) {
             return true;
         }
+
         return false;
     }
 
@@ -66,6 +69,10 @@ public abstract class Ship {
 
     public ArrayList<ShipPart> getShipParts() {
         return this.shipParts;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

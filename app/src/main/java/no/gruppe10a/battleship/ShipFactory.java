@@ -1,3 +1,4 @@
+
 package no.gruppe10a.battleship;
 
 /**
@@ -20,5 +21,9 @@ public abstract class ShipFactory {
         Ship newShip = this.createShip(id, this.shipSize);
 
         return newShip;
+    }
+
+    public int getShipSize() {
+        return shipSize;
     }
 }

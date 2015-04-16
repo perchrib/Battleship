@@ -26,6 +26,7 @@ public class GameBoard {
     private static BattleshipFactory battleshipFactory;
     private static CarrierFactory carrierFactory;
 
+    /** FOR DEBUGGING - Color code to easily recognize ships when printing to console*/
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_RESET = "\u001B[0m";
 
@@ -33,9 +34,9 @@ public class GameBoard {
     public GameBoard(FactoryProducer factoryProducer) {
         board = new ShipPart [Constants.ROW_SIZE][Constants.COLUMN_SIZE];
         ships = new ArrayList<Ship>();
-        //destroyedShips = new ArrayList<Ship>();
 
-        System.out.println("1. Constructor");
+        destroyedShips = new ArrayList<Ship>();
+
 
         this.destroyerFactory = (DestroyerFactory) factoryProducer.createFactory("DESTROYER");
         this.submarineFactory = (SubmarineFactory) factoryProducer.createFactory("SUBMARINE");
@@ -46,74 +47,19 @@ public class GameBoard {
 
     }
 
- /*   // player adds ships to board and cant add more than the limit
-    public boolean addShip(int [][] pos) {
-
-        if (ships.size() < 5) {
-            switch (pos.length) {
-                case 2:
-                    Destroyer destroyer = new Destroyer();
-                    ships.add(destroyer);
-                    for (int i = 0; i < pos.length; i++) {
-                        board[i][i] = destroyer;
-                    }
-                    return true;
-                case 3:
-                    Submarine submarine = new Submarine();
-                    ships.add(submarine);
-                    for (int i = 0; i < pos.length; i ++) {
-                        board[i][i] = submarine;
-                    }
-                    return true;
-                case 4:
-                    Battleship battleship = new Battleship();
-                    ships.add(battleship);
-                    for (int i = 0; i < pos.length; i++) {
-                        board[i][i] = battleship;
-                    }
-                    return true;
-                case 5:
-                    Carrier carrier = new Carrier();
-                    ships.add(carrier);
-                    for (int i = 0; i < pos.length; i++) {
-                        board[i][i] = carrier;
-                    }
-                    return true;
-            }
-        }
-        return false;
-    }*/
-
-/*    // returns true if a part of a ship is hit and false if a DestroyedPart is hit or water is hit
-    public int ShipHit(int [] pos) {
-        if (board[pos[0]][pos[1]] == null) {
-            return 0;
-        } else if (board[pos[0]][pos[1]] instanceof ShipPart) {
-                return 1;
-        } else {
-            board[pos[0]][pos[1]].takeDamage();
-            if (board[pos[0]][pos[1]].isDestroyed()) {
-                ships.remove(board[pos[0]][pos[1]]);
-                destroyedShips.add(board[pos[0]][pos[1]]);
-            }
-            board[pos[0]][pos[1]] = new ShipPart();
-            return 2;
-        }
-    }*/
 
     /**
      * Checks if the player owning this board has lost by checking if all ships are destroyed
      * @return  true if player has lost and false otherwise
      */
     public boolean hasLost() {
-        return ships.isEmpty();
+        return (this.ships.size() == this.destroyedShips.size());
     }
 
     /**
      * Initializes and adds ships to the board's list of ships
      */
     private void initializeShips() {
-        System.out.println("3. Init ships");
         int nofDestroyers = Constants.NUMBER_OF_DESTROYERS;
         int nofSubmarines = Constants.NUMBER_OF_SUBMARINES;
         int nofBattleships = Constants.NUMBER_OF_BATTLESHIPS;
@@ -129,7 +75,6 @@ public class GameBoard {
             this.ships.add(this.submarineFactory.orderShip(shipCounter));
             shipCounter++;
         }
-        System.out.println("4. Done init ships");
 
         for(int i = 0; i < nofBattleships; i++) {
             this.ships.add(this.battleshipFactory.orderShip(shipCounter));
@@ -147,7 +92,6 @@ public class GameBoard {
      * Initializes board and adds ships to it
      */
     private void initializeBoard() {
-        System.out.println("2. Initialize board");
         for (int i = 0; i < board.length; i ++) {
             for (int j = 0; j < board[i].length; j++) {
                 board[i][j] = null;
@@ -162,36 +106,28 @@ public class GameBoard {
      * INCOMPLETE
      */
     private void placeShipsRandom() {
-        System.out.println("5. Start placing random");
         Random r = new Random();
         int min = 0; //Lowest index possible for row and column
-        boolean horizontal = true;
+        boolean horizontal;
 
         for(Ship s : this.ships) {
             int randRow = -1;
             int randCol = -1;
+            horizontal = r.nextBoolean();
 
             ArrayList<int[]> shipPartCoords = this.calcShipPartCoords(s, randRow, randCol, horizontal);
 
             while(!checkIfValidShipPlacement(shipPartCoords)) {
-                randRow = r.nextInt(Constants.ROW_SIZE - min) + min;
-                randCol = r.nextInt(Constants.COLUMN_SIZE - min) + min;
+                randRow = r.nextInt(Constants.ROW_SIZE);
+                randCol = r.nextInt(Constants.COLUMN_SIZE);
                 shipPartCoords = this.calcShipPartCoords(s, randRow, randCol, horizontal);
+                horizontal = r.nextBoolean();
             }
-
-            //DEBUG CODE
-            System.out.println("-- Produced shipCoords");
-
-            for (int[] coord : shipPartCoords) {
-                System.out.println("Row:" + coord[0] + ", Col:" + coord[1]);
-            }
-
 
             //Counter for iteration through shipPartCoords
             int k = 0;
             for(ShipPart part : s.getShipParts()) {
                 int[] coords = shipPartCoords.get(k);
-                System.out.println("Row:" + coords[0] + ", Col:" + coords[1]);
                 int rowCoord = coords[0];
                 int colCoord = coords[1];
 
@@ -200,9 +136,8 @@ public class GameBoard {
             }
 
         }
-        System.out.println("-- Done placing random");
-    }
 
+    }
 
 
     /**
@@ -210,7 +145,6 @@ public class GameBoard {
      * For printing in console to test and debug before integrating with graphics
      */
     public void printBoard() {
-        System.out.println("PRintsboard");
         for(int row = 0; row < this.board.length; row++) {
             for(int col = 0; col < this.board[row].length; col++) {
                 if(this.board[row][col] == null) {
@@ -239,10 +173,6 @@ public class GameBoard {
         }
         System.out.println();
 
-        /*//Print ships in ships list
-        for(Ship s : this.ships) {
-            System.out.println(s);
-        }*/
     }
 
   /*  *//**
@@ -262,7 +192,7 @@ public class GameBoard {
      * Checks if a ship has been hit
      * @param row   Row number on board
      * @param col   Column number on board
-     * @return      If it is a miss, hit or if it is a leathal hit destroying the ship
+     * @return      If it is a miss, hit or if it is a lethal hit destroying the ship, using enum HitType
      */
     private HitType isShipHit(int row, int col) {
 
@@ -271,8 +201,13 @@ public class GameBoard {
 
         if(this.board[row][col] instanceof ShipPart) {
             ShipPart attackedPart = this.board[row][col];
+            Ship attackedShip = attackedPart.getOwnerShip();
             attackedPart.destroy();
-            if()
+            if(attackedShip.isDestroyed()) {
+                this.destroyedShips.add(attackedShip);
+                return HitType.SHIP_DESTROYED;
+            }
+            return HitType.HIT;
         }
 
         return HitType.MISS;
@@ -308,17 +243,18 @@ public class GameBoard {
 
             // Check if ship part is being placed on another ship's ship part
             else if (this.board[cRow][cCol] instanceof ShipPart) {
-                //DEBUGGING
-                System.out.println("TRYING TO PLACE ON OTHER SHIP");
                 return false;
             }
 
             // Check if ship part is being placed next to another ship's ship part
             else if (
+                    //Right, Left, Down, Up
                     (cRow+1 >= 0 && cRow+1 < Constants.ROW_SIZE && this.board[cRow+1][cCol] instanceof ShipPart) ||
                     (cRow-1 >= 0 && cRow-1 < Constants.ROW_SIZE && this.board[cRow-1][cCol] instanceof ShipPart) ||
                     (cCol+1 >= 0 && cCol+1 < Constants.COLUMN_SIZE && this.board[cRow][cCol+1] instanceof ShipPart) ||
                     (cCol-1 >= 0 && cCol-1 < Constants.COLUMN_SIZE && this.board[cRow][cCol-1] instanceof ShipPart) ||
+
+                    // Diagonals
                     (cCol-1 >= 0 && cCol-1 < Constants.COLUMN_SIZE && cRow-1 >= 0 && cRow-1 < Constants.COLUMN_SIZE && this.board[cRow-1][cCol-1] instanceof ShipPart) ||
                     (cCol-1 >= 0 && cCol-1 < Constants.COLUMN_SIZE && cRow+1 >= 0 && cRow+1 < Constants.COLUMN_SIZE && this.board[cRow+1][cCol-1] instanceof ShipPart) ||
                     (cCol+1 >= 0 && cCol+1 < Constants.COLUMN_SIZE && cRow-1 >= 0 && cRow-1 < Constants.COLUMN_SIZE && this.board[cRow-1][cCol+1] instanceof ShipPart) ||
@@ -341,7 +277,6 @@ public class GameBoard {
      * @return              Returns an ArrayList consisting of arrays with two coordinates for each ship part
      */
     private ArrayList<int[]> calcShipPartCoords(Ship s, int row, int col, boolean horizontal) {
-        System.out.println("6. Starting calculating ship part coords");
 
         //List of potential placement coordinates for the ship parts
         ArrayList<int[]> shipPartCoords = new ArrayList<int[]>();
